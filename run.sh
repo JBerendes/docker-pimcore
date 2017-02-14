@@ -1,19 +1,23 @@
 #!/bin/bash
 
-# temp. start mysql to do all the install stuff
-/usr/bin/mysqld_safe > /dev/null 2>&1 &
-
-# ensure mysql is running properly
-sleep 20 
+set -euo pipefail
 
 # install pimcore if needed
 if [ ! -d /var/www/pimcore ]; then
+  # temp. start mysql to do all the install stuff
+  service mysql start
+
   # download & extract
   cd /var/www
-  rm -r /var/www/*
+  rm -rf /var/www/*
   sudo -u www-data wget https://www.pimcore.org/download/pimcore-data.zip -O /tmp/pimcore.zip 
-  sudo -u www-data unzip /tmp/pimcore.zip -d /var/www/
+  sudo -u www-data unzip -o /tmp/pimcore.zip -d /var/www/
   rm /tmp/pimcore.zip 
+
+  while ! pgrep -o mysqld > /dev/null; do
+    # ensure mysql is running properly
+    sleep 1
+  done
   
   # create demo mysql user
   mysql -u root -e "CREATE USER 'pimcore_demo'@'%' IDENTIFIED BY 'secretpassword';"
@@ -31,9 +35,14 @@ if [ ! -d /var/www/pimcore ]; then
   sudo -u www-data cp /tmp/cache.php /var/www/website/var/config/cache.php
   
   sudo -u www-data php /var/www/pimcore/cli/console.php reset-password -u admin -p demo
-fi
 
-# stop temp. mysql service
-mysqladmin -uroot shutdown
+  # stop temp. mysql service
+  service mysql stop
+
+  while pgrep -o mysqld > /dev/null; do
+    # ensure mysql is properly shut down
+    sleep 1
+  done
+fi
 
 exec supervisord -n

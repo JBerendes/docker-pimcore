@@ -35,6 +35,9 @@ ADD vhost.conf /etc/apache2/sites-enabled/000-default.conf
 
 # configure mysql
 RUN sed -i -e"s/^bind-address\s*=\s*127.0.0.1/bind-address = 0.0.0.0/" /etc/mysql/my.cnf
+# Make sure to create /var/run/mysqld for the PID file as we don't use the
+# debian 'service' command to start MySQL
+RUN mkdir -p /var/run/mysqld && chown mysql:mysql /var/run/mysqld
 
 # configure php-fpm
 RUN rm -r /etc/php/7.0/cli/php.ini
