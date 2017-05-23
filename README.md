@@ -1,47 +1,22 @@
-# Docker demo container for pimcore
+# Docker container for pimcore
 
-This is a full featured demo installation as a docker image. 
-It fulfills all system requirements as well as all best practices (such as caching, ...). 
-So this configuration can also be seen as a reference how to set up a suitable server for pimcore following best practices. 
+This is a full-featured Pimcore install as a docker image.  It fulfills all
+system requirements as well as all best practices, such as caching.  So this
+configuration can be seen as a reference how to set up a suitable server for
+pimcore following best practices. 
 
-## Building locally 
+## Building from source without demo data
+
+Choose between `v5` (upcoming Pimcore 5.x labelled `unstable`) and `v4` (stable 4.x series):
+
 ```
-mkdir pimcore-demo
-git clone https://github.com/pimcore/docker-pimcore-demo-standalone.git ./pimcore-demo/
-cd pimcore-demo
-docker build -t pimcore/demo .
-docker run -d -p 80:80 --name=pimcore_demo pimcore/demo
-``` 
-
-## Using Docker Hub
-```
-docker pull pimcore/docker-pimcore-demo-standalone
-docker run -d -p 80:80 --name=pimcore_demo pimcore/docker-pimcore-demo-standalone
-``` 
-
-## Running pimcore
-After starting the container it'll take some time until your pimcore installation is ready. This depends on your internet connection as well as on the available ressources on the host. 
-
-You can check the status of your image at any time by using the following command: 
-```
-docker logs -f pimcore_demo
+docker build -t pimcore . --build-arg PIMCORE_RELEASE=v5
+docker run --name pimcore -d -p 4321:80 pimcore
 ```
 
-This image automatically exposes port 80 to the host, so after running the image you should be able to access the demo site via: 
-```
-http://IP-OR-HOSTNAME-OF-DOCKER-HOST/
-http://IP-OR-HOSTNAME-OF-DOCKER-HOST/admin/
-```
+Point your browser to http://localhost:4321/install/ and enter the following information:
 
-### Admin user / password
-```
-http://IP-OR-HOSTNAME-OF-DOCKER-HOST/admin/
-Username: admin
-Password: demo
-```
+- Username: pimcore
+- Database: pimcore
 
-### References
-
-* [pimcore Demo Docker Hub Page](https://registry.hub.docker.com/u/pimcore/docker-pimcore-demo-standalone/) 
-* [pimcore Demo Docker GitHub Repository](https://github.com/pimcore/docker-pimcore-demo-standalone/)
-
+Choose an admin login and password, and voilà!

@@ -29,9 +29,8 @@ RUN apt-get -y install apache2 libapache2-mod-fastcgi
 RUN a2dismod -f cgi autoindex mpm_worker mpm_prefork
 RUN a2enmod rewrite actions fastcgi alias status filter expires headers setenvif proxy proxy_fcgi socache_shmcb mpm_event ssl
 RUN rm /etc/apache2/sites-enabled/* 
-RUN rm -r /var/www/* 
-RUN chown -R www-data:www-data /var/www
-ADD vhost.conf /etc/apache2/sites-enabled/000-default.conf
+
+ADD vhost.conf /tmp
 
 # configure mysql
 RUN sed -i -e"s/^bind-address\s*=\s*127.0.0.1/bind-address = 0.0.0.0/" /etc/mysql/my.cnf
@@ -45,7 +44,7 @@ RUN rm -r /etc/php/7.0/fpm/php.ini
 ADD php.ini /etc/php/7.0/fpm/php.ini 
 RUN ln -s /etc/php/7.0/fpm/php.ini /etc/php/7.0/cli/php.ini
 RUN mv /etc/php/7.0/fpm/pool.d/www.conf /etc/php/7.0/fpm/pool.d/www.conf.dist 
-ADD www-data.conf /etc/php/7.0/fpm/pool.d/www-data.conf
+ADD www-data.conf /tmp
 
 # configure redis
 ADD redis.conf /tmp/redis.conf
@@ -74,6 +73,18 @@ ADD cache.php /tmp/cache.php
 EXPOSE 80
 
 # volumes
-VOLUME ["/var/www", "/var/lib/mysql"]
+VOLUME [$PIMCORE_INSTALLDIR, "/var/lib/mysql"]
+
+ARG PIMCORE_DBNAME
+ARG PIMCORE_DBUSER
+ARG PIMCORE_DBPASS
+ARG PIMCORE_RELEASE
+ARG PIMCORE_INSTALLDIR
+
+ENV PIMCORE_DBNAME=${PIMCORE_DBNAME}
+ENV PIMCORE_DBUSER=${PIMCORE_DBUSER}
+ENV PIMCORE_DBPASS=${PIMCORE_DBPASS}
+ENV PIMCORE_RELEASE=${PIMCORE_RELEASE}
+ENV PIMCORE_INSTALLDIR=${PIMCORE_INSTALLDIR}
 
 CMD ["/run.sh"]
