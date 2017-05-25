@@ -49,7 +49,8 @@ ADD redis.conf /tmp/redis.conf
 RUN cat /tmp/redis.conf >> /etc/redis/redis.conf
 
 # install tools
-RUN wget "http://download.gna.org/wkhtmltopdf/0.12/0.12.2.1/wkhtmltox-0.12.2.1_linux-jessie-amd64.deb" -O wkhtmltopdf-0.12.deb && dpkg -i wkhtmltopdf-0.12.deb
+ARG WKHTMLTOPDF_URL=https://downloads.wkhtmltopdf.org/0.12/0.12.2.1/wkhtmltox-0.12.2.1_linux-jessie-amd64.deb
+RUN wget $WKHTMLTOPDF_URL -O wkhtmltopdf-0.12.deb && dpkg -i wkhtmltopdf-0.12.deb
 ADD install-ghostscript.sh /tmp/install-ghostscript.sh
 ADD install-ffmpeg.sh /tmp/install-ffmpeg.sh
 RUN chmod 755 /tmp/*.sh
