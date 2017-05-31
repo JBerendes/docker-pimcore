@@ -14,7 +14,8 @@ docker build -t pimcore . --build-arg PIMCORE_RELEASE=v5
 docker run --name pimcore -d -p 4321:80 pimcore
 ```
 
-Point your browser to http://localhost:4321/install/ and enter the following information:
+Point your browser to http://localhost:4321/install/ (v4) or
+http://localhost:4321/install.php (v5) and enter the following information:
 
 - Username: pimcore
 - Database: pimcore
