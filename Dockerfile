@@ -69,6 +69,9 @@ ADD supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 # pimcore config files
 ADD cache.php /tmp/cache.php
 
+# Install composer
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+
 # ports
 EXPOSE 80
 
