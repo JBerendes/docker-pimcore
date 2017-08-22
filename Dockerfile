@@ -63,6 +63,8 @@ RUN /tmp/install-ffmpeg.sh
 ADD start-apache.sh /start-apache.sh
 ADD start-php-fpm.sh /start-php-fpm.sh
 ADD run.sh /run.sh
+ADD vars.sh /vars.sh
+ADD install.sh /install.sh
 RUN chmod 755 /*.sh
 ADD supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
