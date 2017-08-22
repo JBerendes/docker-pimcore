@@ -22,10 +22,8 @@ fi
 
 # install pimcore if needed
 if [ ! -e $INSTALLDIR/.install_complete ]; then
-  if ! test -d $INSTALLDIR; then
-    mkdir $INSTALLDIR
-    chown www-data $INSTALLDIR
-  fi
+  mkdir -p $INSTALLDIR
+  chown www-data $INSTALLDIR
 
   DB_OPT="-u ${DB_USER}"
 
