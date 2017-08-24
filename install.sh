@@ -22,7 +22,7 @@ service mysql start
 
 # download & extract
 cd $INSTALLDIR
-sudo -u www-data wget https://www.pimcore.org$URI -O /tmp/pimcore.zip 
+sudo -u www-data wget $PACKAGE_URL -O /tmp/pimcore.zip 
 sudo -u www-data unzip -o /tmp/pimcore.zip -d $INSTALLDIR
 rm /tmp/pimcore.zip 
 

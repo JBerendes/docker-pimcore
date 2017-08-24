@@ -23,3 +23,5 @@ elif test $RELEASE = "v5"; then
 else
   URI=/download/pimcore-stable.zip
 fi
+
+PACKAGE_URL=${PIMCORE_PACKAGE_URL:-https://www.pimcore.org$URI}
