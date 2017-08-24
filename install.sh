@@ -58,7 +58,7 @@ if test "$RELEASE" != "v5"; then
   sudo -u www-data cp /tmp/cache.php ${ROOT}/website/var/config/cache.php
 fi
 
-sudo -u www-data touch $INSTALLDIR/.install_complete
+touch /.install_complete
 
 # stop temp. mysql service
 service mysql stop

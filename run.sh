@@ -5,7 +5,7 @@ set -xeuo pipefail
 . /vars.sh
 
 # install pimcore if needed
-if [ ! -e $INSTALLDIR/.install_complete ]; then
+if [ ! -e /.install_complete ]; then
   . /install.sh
 fi
 
