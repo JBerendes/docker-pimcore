@@ -9,8 +9,8 @@ if ! test -e /etc/apache2/sites-enabled/000-default.conf; then
   rm /tmp/vhost.conf
 fi
 
-if ! test -e /etc/php/7.0/fpm/pool.d/www-data.conf; then
-  sed -e "s|%%ROOT%%|$ROOT|g" < /tmp/www-data.conf > /etc/php/7.0/fpm/pool.d/www-data.conf
+if ! test -e /etc/php/7.1/fpm/pool.d/www-data.conf; then
+  sed -e "s|%%ROOT%%|$ROOT|g" < /tmp/www-data.conf > /etc/php/7.1/fpm/pool.d/www-data.conf
   rm /tmp/www-data.conf
 fi
 

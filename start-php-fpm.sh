@@ -2,4 +2,4 @@
 
 mkdir -p /run/php/
 
-exec php-fpm7.0 -F
+exec php-fpm7.1 -F

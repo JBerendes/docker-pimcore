@@ -1,20 +1,21 @@
 FROM google/debian:jessie
 MAINTAINER pimcore GmbH <info@pimcore.com>
 
+ADD sources.list /etc/apt/sources.list
+
 RUN apt-get update && \
  DEBIAN_FRONTEND=noninteractive apt-get -y upgrade && \
- DEBIAN_FRONTEND=noninteractive apt-get -y install wget sudo supervisor pwgen apt-utils
+ DEBIAN_FRONTEND=noninteractive apt-get -y install wget sudo supervisor pwgen apt-utils 
 
-ADD sources.list /tmp/sources.list
-RUN cat /tmp/sources.list > /etc/apt/sources.list 
+RUN apt-get -y install apt-transport-https && \
+    wget -O /etc/apt/trusted.gpg.d/php.gpg https://packages.sury.org/php/apt.gpg && \
+    echo "deb https://packages.sury.org/php/ jessie main" > /etc/apt/sources.list.d/php.list && \
+    apt-get update
 
-RUN wget -O - http://www.dotdeb.org/dotdeb.gpg | apt-key add - 
-
-RUN apt-get update
 RUN DEBIAN_FRONTEND=noninteractive apt-get -y install \
- php7.0-fpm php7.0-cli php7.0-curl php7.0-dev php7.0-gd php7.0-imagick php7.0-imap \
- php7.0-intl php7.0-mcrypt php7.0-memcache php7.0-mysql php7.0-sqlite php7.0-redis \
- php7.0-bz2 php7.0-ldap php7.0-xml php7.0-mbstring php7.0-zip php7.0-bcmath bzip2 unzip memcached ntpdate libxrender1 libfontconfig1 \
+ php7.1-fpm php7.1-cli php7.1-curl php7.1-dev php7.1-gd php7.1-imagick php7.1-imap \
+ php7.1-intl php7.1-mcrypt php7.1-memcache php7.1-mysql php7.1-sqlite php7.1-redis \
+ php7.1-bz2 php7.1-ldap php7.1-xml php7.1-mbstring php7.1-zip php7.1-bcmath bzip2 unzip memcached ntpdate libxrender1 libfontconfig1 \
  imagemagick inkscape build-essential libssl-dev rcconf sudo lynx autoconf \
  libmagickwand-dev pngnq pngcrush xvfb cabextract libfcgi0ldbl poppler-utils rsync \
  xz-utils libreoffice python-uno libreoffice-math xfonts-75dpi jpegoptim monit \
@@ -33,17 +34,17 @@ RUN rm /etc/apache2/sites-enabled/*
 ADD vhost.conf /tmp
 
 # configure mysql
-RUN sed -i -e"s/^bind-address\s*=\s*127.0.0.1/bind-address = 0.0.0.0/" /etc/mysql/my.cnf
+RUN sed -i -e"s/^bind-address\s*=\s*127.1.0.1/bind-address = 0.0.0.0/" /etc/mysql/my.cnf
 # Make sure to create /var/run/mysqld for the PID file as we don't use the
 # debian 'service' command to start MySQL
 RUN mkdir -p /var/run/mysqld && chown mysql:mysql /var/run/mysqld
 
 # configure php-fpm
-RUN rm -r /etc/php/7.0/cli/php.ini
-RUN rm -r /etc/php/7.0/fpm/php.ini
-ADD php.ini /etc/php/7.0/fpm/php.ini 
-RUN ln -s /etc/php/7.0/fpm/php.ini /etc/php/7.0/cli/php.ini
-RUN mv /etc/php/7.0/fpm/pool.d/www.conf /etc/php/7.0/fpm/pool.d/www.conf.dist 
+RUN rm -r /etc/php/7.1/cli/php.ini
+RUN rm -r /etc/php/7.1/fpm/php.ini
+ADD php.ini /etc/php/7.1/fpm/php.ini 
+RUN ln -s /etc/php/7.1/fpm/php.ini /etc/php/7.1/cli/php.ini
+RUN mv /etc/php/7.1/fpm/pool.d/www.conf /etc/php/7.1/fpm/pool.d/www.conf.dist 
 ADD www-data.conf /tmp
 
 # configure redis
