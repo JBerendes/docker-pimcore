@@ -21,10 +21,20 @@ chown www-data $INSTALLDIR
 service mysql start
 
 # download & extract
-cd $INSTALLDIR
-sudo -u www-data wget $PACKAGE_URL -O /tmp/pimcore.zip 
-sudo -u www-data unzip -o /tmp/pimcore.zip -d $INSTALLDIR
-rm /tmp/pimcore.zip 
+if ! test -z $PIMCORE_REPO_URL; then
+  # Support for Git repos, uses # as delimiter to separate repo URL from refspec
+  # to checkout
+  read GIT_REPO_URL GIT_REPO_REF <<< ${PIMCORE_REPO_URL//#/ }
+  git clone $GIT_REPO_URL $INSTALLDIR
+  cd $INSTALLDIR
+  git checkout $GIT_REPO_REF
+else
+  # Support for http[s]://
+  sudo -u www-data wget $PACKAGE_URL -O /tmp/pimcore.zip
+  sudo -u www-data unzip -o /tmp/pimcore.zip -d $INSTALLDIR
+  cd $INSTALLDIR
+  rm /tmp/pimcore.zip 
+fi
 
 while ! pgrep -o mysqld > /dev/null; do
   # ensure mysql is running properly
