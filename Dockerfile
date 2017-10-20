@@ -9,11 +9,10 @@ RUN apt-get update && \
 
 RUN apt-get -y install apt-transport-https && \
     wget -O /etc/apt/trusted.gpg.d/php.gpg https://packages.sury.org/php/apt.gpg && \
-    echo "deb https://packages.sury.org/php/ jessie main" > /etc/apt/sources.list.d/php.list && \
-    apt-get update
+    echo "deb https://packages.sury.org/php/ jessie main" > /etc/apt/sources.list.d/php.list
 
-RUN DEBIAN_FRONTEND=noninteractive apt-get -y install \
- php7.1-fpm php7.1-cli php7.1-curl php7.1-dev php7.1-gd php7.1-imagick php7.1-imap \
+RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get -y install \
+ php7.1-fpm php7.1-cli php7.1-cli-dbg php7.1-curl php7.1-dev php7.1-gd php7.1-imagick php7.1-imap \
  php7.1-intl php7.1-mcrypt php7.1-memcache php7.1-mysql php7.1-sqlite php7.1-redis \
  php7.1-bz2 php7.1-ldap php7.1-xml php7.1-mbstring php7.1-zip php7.1-bcmath bzip2 unzip memcached ntpdate libxrender1 libfontconfig1 \
  imagemagick inkscape build-essential libssl-dev rcconf sudo lynx autoconf \
