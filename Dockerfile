@@ -3,13 +3,12 @@ MAINTAINER pimcore GmbH <info@pimcore.com>
 
 ADD sources.list /etc/apt/sources.list
 
-RUN apt-get update && \
- DEBIAN_FRONTEND=noninteractive apt-get -y upgrade && \
- DEBIAN_FRONTEND=noninteractive apt-get -y install wget sudo supervisor pwgen apt-utils 
+RUN apt-get update && apt-get -y install wget sudo supervisor pwgen apt-utils apt-transport-https
 
-RUN apt-get -y install apt-transport-https && \
-    wget -O /etc/apt/trusted.gpg.d/php.gpg https://packages.sury.org/php/apt.gpg && \
+RUN wget -O /etc/apt/trusted.gpg.d/php.gpg https://packages.sury.org/php/apt.gpg && \
     echo "deb https://packages.sury.org/php/ jessie main" > /etc/apt/sources.list.d/php.list
+
+RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get -y upgrade
 
 RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get -y install \
  php7.1-fpm php7.1-cli php7.1-cli-dbg php7.1-curl php7.1-dev php7.1-gd php7.1-imagick php7.1-imap \
@@ -25,7 +24,7 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get -y install \
 RUN echo "root:root" | chpasswd
 
 # configure apache
-RUN apt-get -y install apache2 libapache2-mod-fastcgi
+RUN apt-get update && apt-get -y install apache2 libapache2-mod-fastcgi
 RUN a2dismod -f cgi autoindex mpm_worker mpm_prefork
 RUN a2enmod rewrite actions fastcgi alias status filter expires headers setenvif proxy proxy_fcgi socache_shmcb mpm_event ssl
 RUN rm /etc/apache2/sites-enabled/* 
